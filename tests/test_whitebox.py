@@ -1,5 +1,5 @@
-# tests/test_whitebox.py  (white-box tests: written AFTER reading registration.py; expected values still come from the SRS)
-import pytest  # pytest gives us the test runner and raises()
+# tests/test_whitebox.py  (white-box tests: written AFTER reading registration.py; expected values still come from the SRS) done
+import pytest  # pytest gives us the test runner and raises() 
 from registration import Student, Course, registration_decision, register_course  # the code under test
 
 
