@@ -1,0 +1,25 @@
+name: tests                                   # name shown in the Actions tab
+on:                                           # when the workflow runs
+  push:                                       # on every push to any branch
+  pull_request:                               # and on every pull request
+jobs:                                         # list of jobs
+  test:                                       # one job called test
+    runs-on: ubuntu-latest                    # run on a fresh Ubuntu machine
+    steps:                                    # the steps of the job
+      - uses: actions/checkout@v4             # download the repo code
+      - uses: actions/setup-python@v5         # install Python
+        with:                                 # settings for that step
+          python-version: "3.11"              # use Python 3.11
+      - name: Install dependencies            # label for the next step
+        run: python -m pip install -r requirements.txt   # install pytest and pytest-cov
+      - name: Run tests with coverage         # label for the next step
+        shell: bash                           # bash with pipefail so a failing pytest fails the step
+        run: python -m pytest tests/ -v --cov=registration --cov-branch --cov-report=term-missing --cov-report=xml 2>&1 | tee test_output.txt   # run all tests and save the text output
+      - name: Upload test and coverage evidence   # label for the next step
+        if: always()                          # upload even when tests fail (this keeps the evidence)
+        uses: actions/upload-artifact@v4      # built-in upload action
+        with:                                 # settings for the upload
+          name: testing-evidence              # artifact name
+          path: |                             # files to keep
+            test_output.txt
+            coverage.xml
